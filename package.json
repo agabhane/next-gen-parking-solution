@@ -1,0 +1,28 @@
+{
+  "name": "next-gen-parking-solution",
+  "version": "1.0.0",
+  "description": "Next Gen Parking Solution",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agabhane/next-gen-parking-solution.git"
+  },
+  "author": "ashishgabhane1@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/agabhane/next-gen-parking-solution/issues"
+  },
+  "homepage": "https://github.com/agabhane/next-gen-parking-solution#readme",
+  "dependencies": {
+    "express": "~4.0.0",
+    "mongoose": "~4.11.10",
+    "body-parser": "~1.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
