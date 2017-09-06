@@ -1,9 +1,11 @@
 var express = require('express');
-var companyCtrl = require('./company/companyController')
+var companyCtrl = require('./company/companyController');
+var slotCtrl = require('./slots/slotController');
 
 module.exports = function (app) {
   var apiRoutes = express.Router(),
     companyRoutes = express.Router();
+    slotRoutes = express.Router();
 
 
   //Company routes
@@ -12,7 +14,9 @@ module.exports = function (app) {
   companyRoutes.post('/', companyCtrl.createCompany);
 
   //Slots routes
-
+  apiRoutes.use('/slot', slotRoutes);
+  slotRoutes.get('/', slotCtrl.getAllSlots);
+  slotRoutes.post('/', slotCtrl.createSlot);
   
   //User routes
 
