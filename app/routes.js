@@ -1,9 +1,11 @@
 var express = require('express');
-var companyCtrl = require('./company/companyController')
+var companyCtrl = require('./company/companyController');
+var userCtrl = require('./user/userController');
 
 module.exports = function (app) {
   var apiRoutes = express.Router(),
     companyRoutes = express.Router();
+    userRoutes = express.Router();
 
 
   //Company routes
@@ -15,6 +17,10 @@ module.exports = function (app) {
 
   
   //User routes
+
+  apiRoutes.use('/user', userRoutes);
+  userRoutes.get('/', userCtrl.getAllUsers);
+  userRoutes.post('/', userCtrl.createUser);
 
 
   //Transaction routes

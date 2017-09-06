@@ -1,11 +1,11 @@
 var Company = require('./companyModel');
 
 exports.createCompany = function (req, res) {
-  Company.create(req.body, function (err, todo) {
+  Company.create(req.body, function (err) {
     if (err) {
-      res.send(err);
+      res.status(500).send({ error: "boo:(" });
     }
-    Company.find(function (err, companies) {
+    Company.findOne({"name":req.body.name},function (err, companies) {
       if (err) {
         res.send(err);
       }
