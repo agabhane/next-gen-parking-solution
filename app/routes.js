@@ -21,6 +21,7 @@ module.exports = function (app) {
   apiRoutes.use('/user', userRoutes);
   userRoutes.get('/', userCtrl.getAllUsers);
   userRoutes.post('/', userCtrl.createUser);
+  userRoutes.put('/:email', userCtrl.updateUser);
 
 
   //Transaction routes
