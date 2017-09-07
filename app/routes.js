@@ -17,16 +17,16 @@ module.exports = function (app) {
     companyRoutes.post('/', companyCtrl.createCompany);
 
     //Slots routes
+    apiRoutes.use('/slot', slotRoutes);
+    slotRoutes.get('/', slotCtrl.getAllSlots);
+    slotRoutes.post('/', slotCtrl.createSlot);
+    slotRoutes.get('/:companyId', slotCtrl.getSlotsByCompanyId);
+    slotRoutes.put('/:slotId', slotCtrl.updateSlotById);
+    slotRoutes.delete('/:slotId', slotCtrl.deleteSlot);
+    
 
 
     //User routes
-  //Slots routes
-  apiRoutes.use('/slot', slotRoutes);
-  slotRoutes.get('/', slotCtrl.getAllSlots);
-  slotRoutes.post('/', slotCtrl.createSlot);
-
-  //User routes
-
     apiRoutes.use('/user', userRoutes);
     userRoutes.get('/', userCtrl.getAllUsers);
     userRoutes.get('/:email', userCtrl.getUser);
