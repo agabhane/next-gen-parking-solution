@@ -1,11 +1,12 @@
 var Company = require('./companyModel');
+var HttpStatus = require('http-status-codes');
 
 exports.createCompany = function (req, res) {
   Company.create(req.body, function (err) {
     if (err) {
-      res.status(500).send({ error: "boo:(" });
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
     }
-    Company.findOne({"name":req.body.name},function (err, companies) {
+    Company.findOne({ "name": req.body.name }, function (err, companies) {
       if (err) {
         res.send(err);
       }
