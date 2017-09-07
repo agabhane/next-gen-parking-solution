@@ -4,14 +4,25 @@ var userSchema = new mongoose.Schema({
   name: {
     type: String, required: true
   },
-  email: {
-    type: String, required: true, unique: true
-  },
   companyId: {
     type: String, required: true
   },
+  email: {
+    type: String, required: true, unique: true
+  },
+  role: {
+    type: String,
+    enum: ['ADMIN', 'MANAGER', 'USER']
+  },
+  password: {
+    type: String
+  },
   code: {
-    type: String, required: true
+    type: String
+  },
+  status: {
+    type: String, required: true,
+    enum: ['ACTIVE', 'INACTIVE']
   }
 }, {
     timestamps: true

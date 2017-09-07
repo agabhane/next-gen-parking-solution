@@ -1,4 +1,5 @@
 var User = require('./userModel');
+var HttpStatus = require('http-status-codes');
 
 exports.createUser = function (req, res) {
   var resObject = {};
@@ -9,13 +10,13 @@ exports.createUser = function (req, res) {
       } else {
         resObject = { message: 'Mandory field validation error, Field missing ' + Object.keys(err.errors)}
       }
-      res.status(400).send(resObject);
+      res.status(HttpStatus.BAD_REQUEST).send(resObject);
     }
-    User.findOne({"email":req.body.email},function (err, users) {
+    User.findOne({"email":req.body.email}, function (err, user) {
       if (err) {
         res.send(err);
       }
-      res.json(users);
+      res.json(user);
     });
   });
 
@@ -24,22 +25,22 @@ exports.createUser = function (req, res) {
 exports.updateUser = function(req, res){
   User.findOne({"email":req.params.email},function (err, users) {
     if (err) {
-      res.status(500).send({message: "Failed to get User"});//
+      res.status(HttpStatus.BAD_REQUEST).send({message: "Failed to get User"});//
     }
     if(users){
       User.findOneAndUpdate({"email":req.params.email},req.body,function (err, users) {
         if(err){
-          res.status(500).send({ message: "Update User failed" });
+          res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ message: "Update User failed" });
         }
-        User.findOne({"email":req.params.email},function (err, users) {
+        User.findOne({"email":req.params.email},function (err, user) {
           if (err) {
-            res.status(500).send({ message: "User is created but failed while fetching" });
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ message: "User is created but failed while fetching" });
           }
-          res.json(users);
+          res.json(user);
         });
       })
     } else {
-      res.status(400).send({ message: "Given user does not exist"});
+      res.status(HttpStatus.BAD_REQUEST).send({ message: "Given user does not exist"});
     }
   });
 }
