@@ -1,3 +1,4 @@
+'use strict';
 var User = require('./userModel');
 var HttpStatus = require('http-status-codes');
 
@@ -55,7 +56,7 @@ exports.getAllUsers = function (req, res) {
 
 }
 
-exports.getUser = function (req, res) {;
+exports.getUser = function (req, res) {
     User.findOne({"email": req.params.email}, function (err, userOne) {
         if (err) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({message: "User is created but failed while fetching"});

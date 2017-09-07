@@ -1,11 +1,12 @@
+'use strict';
 var express = require('express');
 var companyCtrl = require('./company/companyController');
 var userCtrl = require('./user/userController');
 
 module.exports = function (app) {
     var apiRoutes = express.Router(),
-        companyRoutes = express.Router();
-    userRoutes = express.Router();
+        companyRoutes = express.Router(),
+        userRoutes = express.Router();
 
 
     //Company routes
