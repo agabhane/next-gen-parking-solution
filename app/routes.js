@@ -2,11 +2,13 @@
 var express = require('express');
 var companyCtrl = require('./company/companyController');
 var userCtrl = require('./user/userController');
+var slotCtrl = require('./slots/slotController');
 
 module.exports = function (app) {
     var apiRoutes = express.Router(),
         companyRoutes = express.Router(),
-        userRoutes = express.Router();
+        userRoutes = express.Router(),
+        slotRoutes = express.Router();
 
 
     //Company routes
@@ -18,6 +20,12 @@ module.exports = function (app) {
 
 
     //User routes
+  //Slots routes
+  apiRoutes.use('/slot', slotRoutes);
+  slotRoutes.get('/', slotCtrl.getAllSlots);
+  slotRoutes.post('/', slotCtrl.createSlot);
+
+  //User routes
 
     apiRoutes.use('/user', userRoutes);
     userRoutes.get('/', userCtrl.getAllUsers);
@@ -31,4 +39,4 @@ module.exports = function (app) {
 
 
     app.use('/api', apiRoutes);
-}
+};
