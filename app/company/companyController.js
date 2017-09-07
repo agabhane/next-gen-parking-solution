@@ -2,7 +2,7 @@ var Company = require('./companyModel');
 var HttpStatus = require('http-status-codes');
 
 exports.createCompany = function (req, res) {
-  Company.create(req.body, function (err, todo) {
+  Company.create(req.body, function (err) {
     if (err) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
     }
