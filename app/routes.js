@@ -15,6 +15,7 @@ module.exports = function (app) {
     apiRoutes.use('/company', companyRoutes);
     companyRoutes.get('/', companyCtrl.getAllCompanies);
     companyRoutes.post('/', companyCtrl.createCompany);
+    companyRoutes.delete('/deleteall/', companyCtrl.deleteAllCompanies);
 
     //Slots routes
 
