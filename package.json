@@ -21,7 +21,8 @@
     "express": "~4.0.0",
     "mongoose": "~4.11.10",
     "body-parser": "~1.17.2",
-    "http-status-codes": "~1.2.0"
+    "http-status-codes": "~1.2.0",
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

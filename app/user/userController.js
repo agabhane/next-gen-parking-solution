@@ -2,6 +2,7 @@
 var User = require('./userModel');
 var HttpStatus = require('http-status-codes');
 
+
 exports.createUser = function (req, res) {
     var resObject = {};
     User.create(req.body, function (err) {
@@ -9,7 +10,7 @@ exports.createUser = function (req, res) {
             if (err.errmsg) {
                 resObject = {message: 'Duplicate Key Error, ' + err.errmsg}
             } else {
-                resObject = {message: 'Mandory field validation error, Field missing ' + Object.keys(err.errors)}
+                resObject = {message: err.message}
             }
             res.status(HttpStatus.BAD_REQUEST).send(resObject);
         }
