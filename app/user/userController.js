@@ -5,23 +5,29 @@ var HttpStatus = require('http-status-codes');
 
 exports.createUser = function (req, res) {
     var resObject = {};
-    User.create(req.body, function (err) {
-        if (err) {
-            if (err.errmsg) {
-                resObject = {message: 'Duplicate Key Error, ' + err.errmsg}
-            } else {
-                resObject = {message: err.message}
-            }
-            res.status(HttpStatus.BAD_REQUEST).send(resObject);
+    User.find({"email": req.body.email}, function (err, users) {
+        console.log(users);
+        if (users.length == 0) {
+                User.create(req.body, function (err) {
+                if (err) {
+                    if (err.errmsg) {
+                        resObject = {message: 'Duplicate Key Error, ' + err.errmsg}
+                    } else {
+                        resObject = {message: err.message}
+                    }
+                    res.status(HttpStatus.BAD_REQUEST).send(resObject);
+                }
+                User.findOne({"email": req.body.email}, function (err, user) {
+                    if (err) {
+                        res.send(err);
+                    }
+                    res.json(user);
+                });
+            });
+        } else {
+            res.status(HttpStatus.BAD_REQUEST).send({message: 'User Already exist'});
         }
-        User.findOne({"email": req.body.email}, function (err, user) {
-            if (err) {
-                res.send(err);
-            }
-            res.json(user);
-        });
     });
-
 }
 
 exports.updateUser = function (req, res) {
@@ -48,13 +54,21 @@ exports.updateUser = function (req, res) {
 }
 
 exports.getAllUsers = function (req, res) {
-    User.find(function (err, users) {
-        if (err) {
-            res.send(err);
-        }
-        res.json(users);
-    });
-
+    if(req.query.status){
+        User.find({"status":req.query.status}, function (err, users) {
+            if (err) {
+                res.send(err);
+            }
+            res.json(users);
+        });
+    } else {
+        User.find(function (err, users) {
+            if (err) {
+                res.send(err);
+            }
+            res.json(users);
+        });
+    }
 }
 
 exports.getUser = function (req, res) {
@@ -74,7 +88,7 @@ exports.deleteUser = function (req, res) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({message: "User is created but failed while fetching"});
         } else if (userOne) {
             User.findByIdAndRemove(userOne._id, function (err, deleteUserStatus) {
-                res.json(deleteUserStatus);
+                res.json({"message":"User deleted successfully"});
             });
         } else {
             res.status(HttpStatus.BAD_REQUEST).send({message: "User does not exist"});
