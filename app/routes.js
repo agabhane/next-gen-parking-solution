@@ -3,12 +3,19 @@ var express = require('express');
 var companyCtrl = require('./company/companyController');
 var userCtrl = require('./user/userController');
 var slotCtrl = require('./slots/slotController');
+var authCtrl = require('./authenticationController');
+var passportService = require('../config/passport');
+var passport = require('passport');
+
+var requireAuth = passport.authenticate('jwt', {session: false}),
+    requireLogin = passport.authenticate('local', {session: false});
 
 module.exports = function (app) {
     var apiRoutes = express.Router(),
         companyRoutes = express.Router(),
         userRoutes = express.Router(),
-        slotRoutes = express.Router();
+        slotRoutes = express.Router(),
+        authRoutes = express.Router();
 
 
     //Company routes
@@ -25,7 +32,13 @@ module.exports = function (app) {
     slotRoutes.put('/:slotId', slotCtrl.updateSlotById);
     slotRoutes.delete('/:slotId', slotCtrl.deleteSlot);
     
-
+    //Auth routes
+    apiRoutes.use('/auth', authRoutes);
+    authRoutes.post('/register', authCtrl.register);
+    authRoutes.post('/login', requireLogin, authCtrl.login);
+    authRoutes.get('/protected', requireAuth, function(req, res){
+        res.send({ content: 'Success'});
+    });
 
     //User routes
     apiRoutes.use('/user', userRoutes);
