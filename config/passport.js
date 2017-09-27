@@ -50,7 +50,7 @@ var jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
     }
 
     if (user) {
-      done(null, user);
+      done(null, user, {email:payload.email});
     } else {
       done(null, false);
     }
