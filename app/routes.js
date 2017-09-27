@@ -42,7 +42,7 @@ module.exports = function (app) {
 
     //User routes
     apiRoutes.use('/user', userRoutes);
-    userRoutes.get('/', userCtrl.getAllUsers);
+    userRoutes.get('/', requireAuth, userCtrl.getAllUsers);
     userRoutes.get('/:email', userCtrl.getUser);
     userRoutes.delete('/:email', userCtrl.deleteUser);
     userRoutes.post('/', userCtrl.createUser);
