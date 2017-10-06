@@ -5,6 +5,7 @@ var HttpStatus = require('http-status-codes');
 var defaultHttpErrMsg = HttpStatus.INTERNAL_SERVER_ERROR;
 
 exports.createSlot = function (req, res) {
+    req.body.companyId = req.user.companyId;
   Slot.create(req.body, function (err, todo) {
     if (err) {
       res
@@ -19,7 +20,7 @@ exports.createSlot = function (req, res) {
 }
 
 exports.getAllSlots = function (req, res) {
-  Slot.find(function (err, slots) {
+  Slot.find({companyId: req.user.companyId},function (err, slots) {
     if (err) {
       res
         .status(HttpStatus.defaultHttpErrMsg)
@@ -41,6 +42,7 @@ exports.getSlotsByCompanyId = function (req, res) {
 };
 
 exports.updateSlotById = function (req, res) {
+    req.body.companyId = req.user.companyId;
   Slot.findByIdAndUpdate(req.params.slotId, req.body, function (err, slot) {
     if (err) {
       res
@@ -69,3 +71,12 @@ exports.deleteSlot = function (req, res) {
   })
 
 };
+
+exports.deleteAllSlots = function (req, res) {
+    Slot.collection.drop()
+        .then(() => {
+        res.status(HttpStatus.OK).send({ "message": "All slots have been deleted successfully" });
+}, () => {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ "message": "Failed to delete slots" });
+    });
+}

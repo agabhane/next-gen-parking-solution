@@ -17,5 +17,4 @@ var slotSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
-
 module.exports = mongoose.model('Slot', slotSchema);

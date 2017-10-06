@@ -26,11 +26,11 @@ module.exports = function (app) {
 
     //Slots routes
     apiRoutes.use('/slot', slotRoutes);
-    slotRoutes.get('/', slotCtrl.getAllSlots);
-    slotRoutes.post('/', slotCtrl.createSlot);
-    slotRoutes.get('/:companyId', slotCtrl.getSlotsByCompanyId);
-    slotRoutes.put('/:slotId', slotCtrl.updateSlotById);
-    slotRoutes.delete('/:slotId', slotCtrl.deleteSlot);
+    slotRoutes.get('/', requireAuth, slotCtrl.getAllSlots);
+    slotRoutes.post('/', requireAuth, slotCtrl.createSlot);
+    slotRoutes.get('/:companyId', requireAuth, slotCtrl.getSlotsByCompanyId);
+    slotRoutes.put('/:slotId', requireAuth, slotCtrl.updateSlotById);
+    slotRoutes.delete('/:slotId', requireAuth, slotCtrl.deleteSlot);
     
     //Auth routes
     apiRoutes.use('/auth', authRoutes);
@@ -40,13 +40,14 @@ module.exports = function (app) {
         res.send({ content: 'Success'});
     });
 
+
     //User routes
     apiRoutes.use('/user', userRoutes);
     userRoutes.get('/', requireAuth, userCtrl.getAllUsers);
-    userRoutes.get('/:email', userCtrl.getUser);
-    userRoutes.delete('/:email', userCtrl.deleteUser);
-    userRoutes.post('/', userCtrl.createUser);
-    userRoutes.put('/:email', userCtrl.updateUser);
+    userRoutes.get('/:email', requireAuth, userCtrl.getUser);
+    userRoutes.delete('/:email', requireAuth, userCtrl.deleteUser);
+    userRoutes.post('/', requireAuth, userCtrl.createUser);
+    userRoutes.put('/:email', requireAuth, userCtrl.updateUser);
 
 
     //Transaction routes
