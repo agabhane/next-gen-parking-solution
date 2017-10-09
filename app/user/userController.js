@@ -1,20 +1,22 @@
 'use strict';
 var User = require('./userModel');
 var HttpStatus = require('http-status-codes');
-
+var log4js = require('log4js');
+var logger = log4js.getLogger();
+logger.level = 'debug';
 
 exports.createUser = function (req, res) {
     var resObject = {};
     User.find({"email": req.body.email}, function (err, users) {
-        console.log(users);
         if (users.length == 0) {
-                User.create(req.body, function (err) {
+            User.create(req.body, function (err) {
                 if (err) {
                     if (err.errmsg) {
                         resObject = {message: 'Duplicate Key Error, ' + err.errmsg}
                     } else {
                         resObject = {message: err.message}
                     }
+                    logger.debug('[FAILED] - create user - ' + JSON.stringify(resObject));
                     res.status(HttpStatus.BAD_REQUEST).send(resObject);
                 }
                 User.findOne({"email": req.body.email}, function (err, user) {
@@ -25,10 +27,10 @@ exports.createUser = function (req, res) {
                 });
             });
         } else {
-            res.status(HttpStatus.BAD_REQUEST).send({message: 'User Already exist'});
-        }
+                res.status(HttpStatus.BAD_REQUEST).send({message: 'User Already exist'});
+            }
     });
-}
+};
 
 exports.updateUser = function (req, res) {
     User.findOne({"email": req.params.email}, function (err, users) {
@@ -51,28 +53,19 @@ exports.updateUser = function (req, res) {
             res.status(HttpStatus.BAD_REQUEST).send({message: "Given user does not exist"});
         }
     });
-}
+};
 
 exports.getAllUsers = function (req, res) {
-    if(req.query.status){
-        User.find({"status":req.query.status}, function (err, users) {
-            if (err) {
-                res.send(err);
-            }
-            res.json(users);
-        });
-    } else {
-        User.find(function (err, users) {
-            if (err) {
-                res.send(err);
-            }
-            res.json(users);
-        });
-    }
-}
+    User.find({companyId: req.user.companyId}, {password: 0}, function (err, users) {
+        if (err) {
+            res.send(err);
+        }
+        res.json(users);
+    });
+};
 
 exports.getUser = function (req, res) {
-    User.findOne({"email": req.params.email}, function (err, userOne) {
+    User.findOne({"email": req.params.email, companyId: req.user.companyId}, {password: 0}, function (err, userOne) {
         if (err) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({message: "User is created but failed while fetching"});
         } else if (userOne) {
@@ -81,17 +74,17 @@ exports.getUser = function (req, res) {
             res.status(HttpStatus.BAD_REQUEST).send({message: "User does not exist"});
         }
     });
-}
+};
 exports.deleteUser = function (req, res) {
-    User.findOne({"email": req.params.email}, function (err, userOne) {
-        if (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({message: "User is created but failed while fetching"});
-        } else if (userOne) {
-            User.findByIdAndRemove(userOne._id, function (err, deleteUserStatus) {
-                res.json({"message":"User deleted successfully"});
-            });
-        } else {
-            res.status(HttpStatus.BAD_REQUEST).send({message: "User does not exist"});
-        }
-    });
+  User.findOne({ "email": req.params.email, companyId: req.user.companyId}, function (err, userOne) {
+    if (err) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ message: "User is created but failed while fetching" });
+    } else if (userOne) {
+      User.findByIdAndRemove(userOne._id, function (err, deleteUserStatus) {
+        res.json(deleteUserStatus);
+      });
+    } else {
+      res.status(HttpStatus.BAD_REQUEST).send({ message: "User does not exist" });
+    }
+  });
 }
